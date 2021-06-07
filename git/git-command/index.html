@@ -23,38 +23,38 @@
   <meta name="description" content="Git简单介绍Git是一个分布式版本控制软件，最初由Linus Torvalds创作，于2005年以GPL发布。最初目的是为更好地管理Linux内核开发而设计。 Git工作流程以及各个区域  Workspace：工作区 Staging&#x2F;Index：暂存区 Local Repository：本地仓库（可修改） &#x2F;refs&#x2F;remotes：远程仓库的引用（不可修改） Remote：远程仓库  Git">
 <meta property="og:type" content="article">
 <meta property="og:title" content="「Git」工作流和常用命令">
-<meta property="og:url" content="http://coldjk.github.io/2018/07/07/git/git-command/index.html">
+<meta property="og:url" content="http://coldjk.github.io/git/git-command/index.html">
 <meta property="og:site_name" content="Senkorl">
 <meta property="og:description" content="Git简单介绍Git是一个分布式版本控制软件，最初由Linus Torvalds创作，于2005年以GPL发布。最初目的是为更好地管理Linux内核开发而设计。 Git工作流程以及各个区域  Workspace：工作区 Staging&#x2F;Index：暂存区 Local Repository：本地仓库（可修改） &#x2F;refs&#x2F;remotes：远程仓库的引用（不可修改） Remote：远程仓库  Git">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_1.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_2.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_3.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_4.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_5.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_6.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_7.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_8.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_9.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_10.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_11.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_12.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_13.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_14.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_15.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_16.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_17.png">
-<meta property="og:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640_18.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_1.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_2.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_3.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_4.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_5.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_6.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_7.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_8.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_9.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_10.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_11.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_12.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_13.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_14.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_15.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_16.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_17.png">
+<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_18.png">
 <meta property="article:published_time" content="2018-07-07T04:02:05.000Z">
 <meta property="article:modified_time" content="2021-06-07T16:46:03.948Z">
 <meta property="article:author" content="Senkorl">
 <meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://coldjk.github.io/2018/07/07/git/git-command/640.png">
+<meta name="twitter:image" content="http://coldjk.github.io/git/git-command/640.png">
 
-<link rel="canonical" href="http://coldjk.github.io/2018/07/07/git/git-command/">
+<link rel="canonical" href="http://coldjk.github.io/git/git-command/">
 
 
 <script id="page-configurations">
@@ -188,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://coldjk.github.io/2018/07/07/git/git-command/">
+    <link itemprop="mainEntityOfPage" href="http://coldjk.github.io/git/git-command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -241,9 +241,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="/2018/07/07/git/git-command/640.png" alt="img"></p>
+        <p><img src="/git/git-command/640.png" alt="img"></p>
 <h2 id="Git简单介绍"><a href="#Git简单介绍" class="headerlink" title="Git简单介绍"></a>Git简单介绍</h2><p><code>Git</code>是一个分布式版本控制软件，最初由<code>Linus Torvalds</code>创作，于2005年以<code>GPL</code>发布。最初目的是为更好地管理<code>Linux</code>内核开发而设计。</p>
-<h2 id="Git工作流程以及各个区域"><a href="#Git工作流程以及各个区域" class="headerlink" title="Git工作流程以及各个区域"></a>Git工作流程以及各个区域</h2><p><img src="/2018/07/07/git/git-command/640.png" alt="img"></p>
+<h2 id="Git工作流程以及各个区域"><a href="#Git工作流程以及各个区域" class="headerlink" title="Git工作流程以及各个区域"></a>Git工作流程以及各个区域</h2><p><img src="/git/git-command/640.png" alt="img"></p>
 <ul>
 <li>Workspace：工作区</li>
 <li>Staging/Index：暂存区</li>
@@ -251,7 +251,7 @@
 <li>/refs/remotes：远程仓库的引用（不可修改）</li>
 <li>Remote：远程仓库</li>
 </ul>
-<h2 id="Git文件状态变化"><a href="#Git文件状态变化" class="headerlink" title="Git文件状态变化"></a>Git文件状态变化</h2><p><img src="/2018/07/07/git/git-command/640_1.png" alt="640_1"></p>
+<h2 id="Git文件状态变化"><a href="#Git文件状态变化" class="headerlink" title="Git文件状态变化"></a>Git文件状态变化</h2><p><img src="/git/git-command/640_1.png" alt="640_1"></p>
 <h2 id="Git各种命令"><a href="#Git各种命令" class="headerlink" title="Git各种命令"></a>Git各种命令</h2><h3 id="Git简单命令"><a href="#Git简单命令" class="headerlink" title="Git简单命令"></a>Git简单命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在当前目录新建一个git仓库</span></span><br><span class="line">git init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开git仓库图形界面`</span></span><br><span class="line">gitk</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示所有变更信息</span></span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除所有Untracked files</span></span><br><span class="line">git clean -fd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载远程仓库的所有更新</span></span><br><span class="line">git fetch remote</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载远程仓库的所有更新，并且Merge</span></span><br><span class="line">git pull romote branch-name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看上次commit id</span></span><br><span class="line">git rev-parse HEAD </span><br><span class="line"></span><br><span class="line"><span class="comment"># 将指定分支合并到当前分支</span></span><br><span class="line">git merge branch-name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将最近的一次commit打包到patch文件中</span></span><br><span class="line">git format-patch HEAD^ </span><br><span class="line"></span><br><span class="line"><span class="comment"># 将patch文件 添加到本地仓库</span></span><br><span class="line">git am  patch-file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看指定文件修改历史</span></span><br><span class="line">git blame file-name</span><br></pre></td></tr></table></figure>
 
 <h3 id="Git常用命令"><a href="#Git常用命令" class="headerlink" title="Git常用命令"></a>Git常用命令</h3><h4 id="git-clone"><a href="#git-clone" class="headerlink" title="git clone"></a>git clone</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将远程git仓库克隆到本地</span></span><br><span class="line">git <span class="built_in">clone</span> url</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将远程git仓库克隆到本地</span></span><br><span class="line">git <span class="built_in">clone</span> -b branch url </span><br></pre></td></tr></table></figure>
@@ -346,13 +346,13 @@
 
 <h3 id="怎么保证团队成员提交的代码都是可运行的？"><a href="#怎么保证团队成员提交的代码都是可运行的？" class="headerlink" title="怎么保证团队成员提交的代码都是可运行的？"></a>怎么保证团队成员提交的代码都是可运行的？</h3><p>这里想说的是使用<code>git hooks</code>，一般在项目目录<code>.git/hooks</code>，客户端可以使用<code>hooks</code>，控制团队<code>commit</code>提交规范，或者<code>push</code>之前，自动编译项目校验项目可运行。服务端可以使用<code>hooks</code>，控制push之后自动构建项目，<code>merge</code>等自动触发单元测试等。</p>
 <h3 id="git-reset-hard命令，执行错了，能恢复吗？"><a href="#git-reset-hard命令，执行错了，能恢复吗？" class="headerlink" title="git reset --hard命令，执行错了，能恢复吗？"></a><code>git reset --hard</code>命令，执行错了，能恢复吗？</h3><p>查看当前<code>commit log</code></p>
-<p><img src="/2018/07/07/git/git-command/640_2.png" alt="img"></p>
+<p><img src="/git/git-command/640_2.png" alt="img"></p>
 <p>误操作<code>git reset --hard 8529cb7</code></p>
-<p><img src="/2018/07/07/git/git-command/640_3.png" alt="img"></p>
+<p><img src="/git/git-command/640_3.png" alt="img"></p>
 <p>执行<code>git reflog</code></p>
-<p><img src="/2018/07/07/git/git-command/640_4.png" alt="img"></p>
+<p><img src="/git/git-command/640_4.png" alt="img"></p>
 <p>还原到之前的样子</p>
-<p><img src="/2018/07/07/git/git-command/640_5.png" alt="img"></p>
+<p><img src="/git/git-command/640_5.png" alt="img"></p>
 <h3 id="公司使用GitLab，平时还用GitHub，多账号SSH，如何配置？"><a href="#公司使用GitLab，平时还用GitHub，多账号SSH，如何配置？" class="headerlink" title="公司使用GitLab，平时还用GitHub，多账号SSH，如何配置？"></a>公司使用GitLab，平时还用GitHub，多账号SSH，如何配置？</h3><p>编辑 <code>~/.ssh/config</code>文件 没有就创建</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># github</span><br><span class="line">Host github.com</span><br><span class="line">Port 22</span><br><span class="line">HostName github.com</span><br><span class="line">PreferredAuthentications publickey</span><br><span class="line">AddKeysToAgent yes</span><br><span class="line">IdentityFile ~/.ssh/github_id_rsa</span><br><span class="line">UseKeychain yes</span><br><span class="line">User iisheng</span><br><span class="line"></span><br><span class="line"># gitlab</span><br><span class="line">Host gitlab.iisheng.cn</span><br><span class="line">Port 22</span><br><span class="line">HostName gitlab.iisheng.cn</span><br><span class="line">PreferredAuthentications publickey</span><br><span class="line">AddKeysToAgent yes</span><br><span class="line">IdentityFile ~/.ssh/gitlab_id_rsa</span><br><span class="line">UseKeychain yes</span><br><span class="line">User iisheng</span><br></pre></td></tr></table></figure>
 
@@ -363,13 +363,13 @@
 <p>然后我们再切换到<code>master</code>分支，执行<code>git merge feature</code>，就可以进行快进式合并了，<code>commmits</code>历史就不会有交叉了。后文我们会详细讲解。</p>
 <p>❝<code>git rebase</code>会更改commit历史，请谨慎使用。</p>
 <p>下面的图是<code>Guava</code>项目的<code>commit</code>记录。</p>
-<p><img src="/2018/07/07/git/git-command/640_6.png" alt="img"></p>
+<p><img src="/git/git-command/640_6.png" alt="img"></p>
 <h3 id="如何修改已经提交的commit信息？"><a href="#如何修改已经提交的commit信息？" class="headerlink" title="如何修改已经提交的commit信息？"></a>如何修改已经提交的commit信息？</h3><p>原始<code>Git</code>提交记录是这样的</p>
-<p><img src="/2018/07/07/git/git-command/640_7.png" alt="img"></p>
+<p><img src="/git/git-command/640_7.png" alt="img"></p>
 <p>执行<code>git rebase -i 070943d</code>，对指定commitId之前的提交，进行修改</p>
-<p><img src="/2018/07/07/git/git-command/640_8.png" alt="img"></p>
+<p><img src="/git/git-command/640_8.png" alt="img"></p>
 <p>修改后<code>Git</code>提交记录变成了这样</p>
-<p><img src="/2018/07/07/git/git-command/640_9.png" alt="img"></p>
+<p><img src="/git/git-command/640_9.png" alt="img"></p>
 <p>❝<code>git rebase -i</code>非常实用，还可以将多个commit合并成一个等很多事情，务必要记下。</p>
 <h3 id="不小心执行了git-stash-clear怎么办？"><a href="#不小心执行了git-stash-clear怎么办？" class="headerlink" title="不小心执行了git stash clear怎么办？"></a>不小心执行了<code>git stash clear</code>怎么办？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fsck --lost-found</span><br></pre></td></tr></table></figure>
 
@@ -401,18 +401,18 @@
 <h2 id="详解git-merge"><a href="#详解git-merge" class="headerlink" title="详解git merge"></a>详解git merge</h2><p>我们执行<code>git merge</code>命令的时候，经常会看到<code>Fast-forward</code>字样，<code>Fast-forward</code>到底是个什么东西？</p>
 <p>其实，<code>git merge</code>一般有三种场景。</p>
 <h3 id="快进式合并"><a href="#快进式合并" class="headerlink" title="快进式合并"></a>快进式合并</h3><p>举个栗子，假如初始存在<code>master</code>和<code>hotfix</code>分支是这样的。</p>
-<p><img src="/2018/07/07/git/git-command/640_10.png" alt="img"></p>
+<p><img src="/git/git-command/640_10.png" alt="img"></p>
 <p>然后我们在<code>hotfix</code>分支加了些代码，分支变成这样了。</p>
-<p><img src="/2018/07/07/git/git-command/640_11.png" alt="img"></p>
+<p><img src="/git/git-command/640_11.png" alt="img"></p>
 <p>这个时候，我们将<code>hotfix</code>分支，<code>merge</code>到<code>master</code>，即执行<code>git merge hotfix</code>。</p>
-<p><img src="/2018/07/07/git/git-command/640_12.png" alt="img"></p>
+<p><img src="/git/git-command/640_12.png" alt="img"></p>
 <p>由于的分支<code>hotfix</code>所指向的提交<code>C3</code>是<code>C2</code>的直接后继， 因此<code>Git</code>会直接将指针向前移动。换句话说，如果顺着一个分支走下去能够到达另一个分支，那么<code>Git</code>在合并两者的时候， 只会简单的将指针向前推进（指针右移），因为这种情况下的合并操作没有需要解决的分歧——这就叫做 <strong>快进（fast-forward）</strong>。</p>
 <h3 id="三方合并"><a href="#三方合并" class="headerlink" title="三方合并"></a>三方合并</h3><p>再举个栗子，假如初始存在<code>feature</code>和<code>master</code>分支情况是这样的。</p>
-<p><img src="/2018/07/07/git/git-command/640_13.png" alt="img"></p>
+<p><img src="/git/git-command/640_13.png" alt="img"></p>
 <p>然后我们在<code>feature</code>分支加了些代码，而<code>master</code>分支也有人加了代码，现在分支变成这样了。</p>
-<p><img src="/2018/07/07/git/git-command/640_14.png" alt="img"></p>
+<p><img src="/git/git-command/640_14.png" alt="img"></p>
 <p>这个时候，我们将<code>feature</code>分支，<code>merge</code>到<code>master</code>，即执行<code>git merge feature</code>。</p>
-<p><img src="/2018/07/07/git/git-command/640_15.png" alt="img"></p>
+<p><img src="/git/git-command/640_15.png" alt="img"></p>
 <p>和之前将分支指针向前推进所不同的是，<code>Git</code>将此次三方合并的结果做了一个<strong>新的快照并且自动创建一个新的提交</strong>指向它。这个被称作一次<strong>合并提交</strong>，它的特别之处在于他有不止一个父提交。</p>
 <p>❝所以我们也知道了，为什么有的时候merge之后会产生新的commit，而有的时候没有。</p>
 <h3 id="遇到冲突时的合并"><a href="#遇到冲突时的合并" class="headerlink" title="遇到冲突时的合并"></a>遇到冲突时的合并</h3><p>如果在两个分支分别对同一个文件做了改动，<code>Git</code>就没法直接合并他们。当遇到冲突的时候，<code>Git</code>会自动停下来，等待我们解决冲突。就像这样</p>
@@ -438,11 +438,11 @@
 <p>然后，我们保存这次提交就完成了这次冲突合并。</p>
 <h2 id="详解git-rebase"><a href="#详解git-rebase" class="headerlink" title="详解git rebase"></a>详解git rebase</h2><h3 id="rebase做了什么"><a href="#rebase做了什么" class="headerlink" title="rebase做了什么"></a>rebase做了什么</h3><p>举个栗子。我们同样用刚才<code>merge</code>的场景。</p>
 <p>如果不用<code>rebase</code>，使用<code>merge</code>是下面这样的，合并分支的时候会产生一个合并提交，而且会有分支交叉的情况。</p>
-<p><img src="/2018/07/07/git/git-command/640_16.png" alt="img"></p>
+<p><img src="/git/git-command/640_16.png" alt="img"></p>
 <p>使用<code>rebase</code>是下面这样的。</p>
-<p><img src="/2018/07/07/git/git-command/640_17.png" alt="img"></p>
+<p><img src="/git/git-command/640_17.png" alt="img"></p>
 <p>然后，切换到<code>master</code>分支，进行一次快进式合并。</p>
-<p><img src="/2018/07/07/git/git-command/640_18.png" alt="img"></p>
+<p><img src="/git/git-command/640_18.png" alt="img"></p>
 <p>❝变基实际上就是基于其他分支重塑当前分支。变基之后，当前分支就相当于是基于最新的其他分支新加了一些commit，这样的话就可以进行快进式合并了。</p>
 <h3 id="rebase原理"><a href="#rebase原理" class="headerlink" title="rebase原理"></a>rebase原理</h3><p>它的原理是首先找到这两个分支（即当前分支 <code>dev</code>、变基操作的目标基底分支<code>master</code>）的最近共同祖先 <code>C2</code>，然后对比当前分支相对于该祖先的历次提交，提取相应的修改并存为临时文件， 然后将当前分支指向目标基底<code>C3</code>, 最后以此将之前另存为临时文件的修改依序应用，也就是在<code>C3</code>后面添加<code>C4&#39;</code>、<code>C5&#39;</code>。</p>
 <h2 id="Git对象与快照"><a href="#Git对象与快照" class="headerlink" title="Git对象与快照"></a>Git对象与快照</h2><p>提到<code>Git</code>，总有人会说<strong>快照</strong>，<strong>快照</strong>是个什么鬼？</p>
@@ -506,12 +506,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2018/06/01/php/PHP-%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/" rel="prev" title="「PHP」学习资源">
+    <a href="/php/PHP-%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/" rel="prev" title="「PHP」学习资源">
       <i class="fa fa-chevron-left"></i> 「PHP」学习资源
     </a></div>
       <div class="post-nav-item">
-    <a href="/2019/07/07/docker/docker%E5%91%BD%E4%BB%A4-clean/" rel="next" title="「docker」clean操作">
-      「docker」clean操作 <i class="fa fa-chevron-right"></i>
+    <a href="/docker/docker-wsl2%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" rel="next" title="「docker」windows-wsl2环境安装">
+      「docker」windows-wsl2环境安装 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -585,7 +585,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
