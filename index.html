@@ -162,94 +162,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://coldjk.github.io/2019/07/07/docker/docker%E5%91%BD%E4%BB%A4-clean/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Senkorl">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Senkorl">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/07/07/docker/docker%E5%91%BD%E4%BB%A4-clean/" class="post-title-link" itemprop="url">「docker」clean操作</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-07-07 00:23:38" itemprop="dateCreated datePublished" datetime="2019-07-07T00:23:38+08:00">2019-07-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-08 00:46:03" itemprop="dateModified" datetime="2021-06-08T00:46:03+08:00">2021-06-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Clean-操作"><a href="#Clean-操作" class="headerlink" title="Clean 操作"></a>Clean 操作</h2><h4 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h4><p>杀死所有正在运行的容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker <span class="built_in">kill</span> $(docker ps -a -q)</span></span><br></pre></td></tr></table></figure>
-
-<p>删除所有已经停止的容器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker rm $(docker ps -a -q)</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h4><p>删除所有未打 dangling 标签的镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker rmi $(docker images -q -f dangling=<span class="literal">true</span>)</span></span><br></pre></td></tr></table></figure>
-
-<p>删除镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除所有镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi $(docker images -q)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 强制删除所有镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi -f $(docker images -q)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 强制删除指定的镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi -f &lt;IMAGE_ID&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>删除指定前缀的镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker images |grep xxx | awk -F<span class="string">&#x27; &#x27;</span> <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> | xargs docker rmi</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="创建快速命令"><a href="#创建快速命令" class="headerlink" title="创建快速命令"></a>创建快速命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 杀死所有正在运行的容器.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockerkillc=<span class="string">&#x27;docker kill $(docker ps -a -q)&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除所有已经停止的容器.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockercleanc=<span class="string">&#x27;docker rm $(docker ps -a -q)&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除所有未打标签的镜像.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockercleani=<span class="string">&#x27;docker rmi $(docker images -q -f dangling=true)&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除所有已经停止的容器和未打标签的镜像.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockerclean=<span class="string">&#x27;dockercleanc || true &amp;&amp; dockercleani&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 别名命令生效</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ~/.bash_aliases</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://coldjk.github.io/2019/07/07/docker/docker-%E4%BD%BF%E7%94%A8wsl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -320,6 +232,94 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># WSL集成将在您的默认WSL发行版上启用。要更改默认的WSL发行版，请运行wsl     </span></span><br><span class="line">&gt; -<span class="literal">-set</span><span class="literal">-default</span> &lt;distro name&gt;。</span><br><span class="line"><span class="comment"># 例如，要将Ubuntu设置为默认的WSL发行版，请运行</span></span><br><span class="line">wsl -<span class="literal">-set</span><span class="literal">-default</span> ubuntu  <span class="comment">#（可选）选择要启用WSL 2的任何其他发行版。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://coldjk.github.io/2019/07/07/docker/docker%E5%91%BD%E4%BB%A4-clean/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Senkorl">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Senkorl">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/07/07/docker/docker%E5%91%BD%E4%BB%A4-clean/" class="post-title-link" itemprop="url">「docker」clean操作</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-07 00:23:38" itemprop="dateCreated datePublished" datetime="2019-07-07T00:23:38+08:00">2019-07-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-08 01:20:44" itemprop="dateModified" datetime="2021-06-08T01:20:44+08:00">2021-06-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Clean-操作"><a href="#Clean-操作" class="headerlink" title="Clean 操作"></a>Clean 操作</h2><h4 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h4><p>杀死所有正在运行的容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker <span class="built_in">kill</span> $(docker ps -a -q)</span></span><br></pre></td></tr></table></figure>
+
+<p>删除所有已经停止的容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker rm $(docker ps -a -q)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h4><p>删除所有未打 dangling 标签的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker rmi $(docker images -q -f dangling=<span class="literal">true</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>删除镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除所有镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi $(docker images -q)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 强制删除所有镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi -f $(docker images -q)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 强制删除指定的镜像</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi -f &lt;IMAGE_ID&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>删除指定前缀的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker images |grep xxx | awk -F<span class="string">&#x27; &#x27;</span> <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> | xargs docker rmi</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="创建快速命令"><a href="#创建快速命令" class="headerlink" title="创建快速命令"></a>创建快速命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 杀死所有正在运行的容器.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockerkillc=<span class="string">&#x27;docker kill $(docker ps -a -q)&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除所有已经停止的容器.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockercleanc=<span class="string">&#x27;docker rm $(docker ps -a -q)&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除所有未打标签的镜像.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockercleani=<span class="string">&#x27;docker rmi $(docker images -q -f dangling=true)&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除所有已经停止的容器和未打标签的镜像.</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">alias</span> dockerclean=<span class="string">&#x27;dockercleanc || true &amp;&amp; dockercleani&#x27;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 别名命令生效</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ~/.bash_aliases</span></span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -2067,7 +2067,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
