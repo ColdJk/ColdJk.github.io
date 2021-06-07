@@ -193,7 +193,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-07 23:22:01" itemprop="dateModified" datetime="2021-06-07T23:22:01+08:00">2021-06-07</time>
+                <time title="修改时间：2021-06-08 01:29:26" itemprop="dateModified" datetime="2021-06-08T01:29:26+08:00">2021-06-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,16 +217,11 @@
 
       
           <h2 id="Windows-Docker-Desktop"><a href="#Windows-Docker-Desktop" class="headerlink" title="Windows Docker Desktop"></a>Windows Docker Desktop</h2><h4 id="设置默认wsl为ubuntu"><a href="#设置默认wsl为ubuntu" class="headerlink" title="设置默认wsl为ubuntu"></a>设置默认wsl为ubuntu</h4><ol>
-<li>确保分发以WSL 2模式运行。WSL可以在v1或v2模式下运行发行版。</li>
+<li>确保分发以 <code>WSL 2</code> 模式运行。WSL可以在 <code>v1</code> 或 <code>v2</code> 模式下运行发行版，但 <code>docker</code> 只能在 <code>WSL 2</code> 上运行。</li>
 </ol>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 要检查WSL模式，请运行</span></span><br><span class="line">&gt; wsl <span class="literal">-l</span> <span class="literal">-v</span></span><br><span class="line"><span class="comment"># 要将现有的Linux发行版升级到v2，请运行：</span></span><br><span class="line">&gt; wsl -<span class="literal">-set</span><span class="literal">-version</span> (distro name)     <span class="number">2</span></span><br><span class="line"><span class="comment"># 要将v2设置为将来安装的默认版本，请运行：</span></span><br><span class="line">&gt; wsl -<span class="literal">-set</span><span class="literal">-default</span><span class="literal">-version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li>wsl -l -v 查看详情，将现有的Linux发行版升级到v2</li>
-</ol>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 要将现有的Linux发行版升级到v2，请运行：</span></span><br><span class="line">&gt; wsl -<span class="literal">-set</span><span class="literal">-version</span> (distro name)     <span class="number">2</span></span><br><span class="line"><span class="comment"># 要将v2设置为将来安装的默认版本，请运行：</span></span><br><span class="line">&gt; wsl -<span class="literal">-set</span><span class="literal">-default</span><span class="literal">-version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<ol start="3">
 <li>Docker   Desktop重新启动时，转到<strong>设置</strong> &gt; <strong>资源</strong> &gt; <strong>WSL集成</strong>。</li>
 </ol>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># WSL集成将在您的默认WSL发行版上启用。要更改默认的WSL发行版，请运行wsl     </span></span><br><span class="line">&gt; -<span class="literal">-set</span><span class="literal">-default</span> &lt;distro name&gt;。</span><br><span class="line"><span class="comment"># 例如，要将Ubuntu设置为默认的WSL发行版，请运行</span></span><br><span class="line">wsl -<span class="literal">-set</span><span class="literal">-default</span> ubuntu  <span class="comment">#（可选）选择要启用WSL 2的任何其他发行版。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
