@@ -17,44 +17,44 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"coldjk.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"coldjk.coding.me","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="Git简单介绍Git是一个分布式版本控制软件，最初由Linus Torvalds创作，于2005年以GPL发布。最初目的是为更好地管理Linux内核开发而设计。 Git工作流程以及各个区域  Workspace：工作区 Staging&#x2F;Index：暂存区 Local Repository：本地仓库（可修改） &#x2F;refs&#x2F;remotes：远程仓库的引用（不可修改） Remote：远程仓库  Git">
 <meta property="og:type" content="article">
 <meta property="og:title" content="「Git」工作流和常用命令">
-<meta property="og:url" content="http://coldjk.github.io/git/git-command/index.html">
+<meta property="og:url" content="http://coldjk.coding.me/git/git-command/index.html">
 <meta property="og:site_name" content="Senkorl">
 <meta property="og:description" content="Git简单介绍Git是一个分布式版本控制软件，最初由Linus Torvalds创作，于2005年以GPL发布。最初目的是为更好地管理Linux内核开发而设计。 Git工作流程以及各个区域  Workspace：工作区 Staging&#x2F;Index：暂存区 Local Repository：本地仓库（可修改） &#x2F;refs&#x2F;remotes：远程仓库的引用（不可修改） Remote：远程仓库  Git">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_1.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_2.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_3.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_4.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_5.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_6.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_7.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_8.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_9.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_10.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_11.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_12.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_13.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_14.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_15.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_16.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_17.png">
-<meta property="og:image" content="http://coldjk.github.io/git/git-command/640_18.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_1.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_2.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_3.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_4.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_5.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_6.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_7.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_8.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_9.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_10.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_11.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_12.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_13.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_14.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_15.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_16.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_17.png">
+<meta property="og:image" content="http://coldjk.coding.me/git/git-command/640_18.png">
 <meta property="article:published_time" content="2018-06-02T04:02:05.000Z">
 <meta property="article:modified_time" content="2018-06-02T04:02:05.000Z">
 <meta property="article:author" content="Senkorl">
 <meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://coldjk.github.io/git/git-command/640.png">
+<meta name="twitter:image" content="http://coldjk.coding.me/git/git-command/640.png">
 
-<link rel="canonical" href="http://coldjk.github.io/git/git-command/">
+<link rel="canonical" href="http://coldjk.coding.me/git/git-command/">
 
 
 <script id="page-configurations">
@@ -188,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://coldjk.github.io/git/git-command/">
+    <link itemprop="mainEntityOfPage" href="http://coldjk.coding.me/git/git-command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
