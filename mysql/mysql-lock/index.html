@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Comic Sans MS:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"senkorl.xyz","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="主要讨论RR隔离级别，因为RC只是少了间隙锁。 一、innodb七种锁共享&#x2F;排他锁(Shared and Exclusive Locks) 共享锁(Shared Locks,S锁) 排他锁(Exclusive Locks,X锁)  可以一起读，读写&#x2F;写写互斥。 意向锁(Intention Locks) 意向共享锁(intention shared lock,IS) 意向排它锁(intention">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「MySQL」加锁情况">
+<meta property="og:url" content="https://senkorl.xyz/mysql/mysql-lock/index.html">
+<meta property="og:site_name" content="Senkorl">
+<meta property="og:description" content="主要讨论RR隔离级别，因为RC只是少了间隙锁。 一、innodb七种锁共享&#x2F;排他锁(Shared and Exclusive Locks) 共享锁(Shared Locks,S锁) 排他锁(Exclusive Locks,X锁)  可以一起读，读写&#x2F;写写互斥。 意向锁(Intention Locks) 意向共享锁(intention shared lock,IS) 意向排它锁(intention">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-01T04:02:05.000Z">
+<meta property="article:modified_time" content="2020-06-01T04:02:05.000Z">
+<meta property="article:author" content="Senkorl">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://senkorl.xyz/mysql/mysql-lock/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>「MySQL」加锁情况 | Senkorl</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Senkorl</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于最有价值的事情.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myhome/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://senkorl.xyz/mysql/mysql-lock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Senkorl">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Senkorl">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「MySQL」加锁情况
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-01 12:02:05" itemprop="dateCreated datePublished" datetime="2020-06-01T12:02:05+08:00">2020-06-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>主要讨论RR隔离级别，因为RC只是少了间隙锁。</p>
+<h2 id="一、innodb七种锁"><a href="#一、innodb七种锁" class="headerlink" title="一、innodb七种锁"></a>一、innodb七种锁</h2><h3 id="共享-排他锁-Shared-and-Exclusive-Locks"><a href="#共享-排他锁-Shared-and-Exclusive-Locks" class="headerlink" title="共享/排他锁(Shared and Exclusive Locks)"></a>共享/排他锁(Shared and Exclusive Locks)</h3><ol>
+<li>共享锁(Shared Locks,S锁)</li>
+<li>排他锁(Exclusive Locks,X锁)</li>
+</ol>
+<p>可以一起读，读写/写写互斥。</p>
+<h3 id="意向锁-Intention-Locks"><a href="#意向锁-Intention-Locks" class="headerlink" title="意向锁(Intention Locks)"></a>意向锁(Intention Locks)</h3><ol>
+<li>意向共享锁(intention shared lock,IS)</li>
+<li>意向排它锁(intention exclusive lock,IX)</li>
+</ol>
+<p>看起来像表级锁，解决表级锁和行级锁的冲突。<br>意向锁之间兼容。<br>事务在请求S锁和X锁前，需要先获得对应的IS、IX锁。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>S</th>
+<th>X</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IS</td>
+<td>兼容</td>
+<td>互斥</td>
+</tr>
+<tr>
+<td>IX</td>
+<td>互斥</td>
+<td>互斥</td>
+</tr>
+</tbody></table>
+<h3 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h3><h4 id="记录锁-Record-Locks"><a href="#记录锁-Record-Locks" class="headerlink" title="记录锁(Record Locks)"></a>记录锁(Record Locks)</h4><p>单条索引记录上加锁，record lock锁住的永远是索引，而非记录本身。如果没有显示索引，innodb会创建隐式的聚集索引。</p>
+<h4 id="间隙锁-Gap-Locks"><a href="#间隙锁-Gap-Locks" class="headerlink" title="间隙锁(Gap Locks)"></a>间隙锁(Gap Locks)</h4><p>锁住一个索引区间(开区间)。<br>锁住索引记录的区间，或第一条索引记录之前的范围，或者最后一条索引记录之后的范围。</p>
+<h4 id="临键锁-Next-Key-Locks"><a href="#临键锁-Next-Key-Locks" class="headerlink" title="临键锁(Next-Key Locks)"></a>临键锁(Next-Key Locks)</h4><p>记录锁与间隙锁的组合，它的封锁范围，既包含索引记录，又包含索引区间(左开右闭区间)。</p>
+<h4 id="插入意向锁-Insert-Intention-Locks"><a href="#插入意向锁-Insert-Intention-Locks" class="headerlink" title="插入意向锁(Insert Intention Locks)"></a>插入意向锁(Insert Intention Locks)</h4><p>一种特殊的间隙锁。<br>两个事务只要插入的行没有冲突，即使在同一间隙，也可以插入。</p>
+<p><em>锁兼容矩阵</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Gap</th>
+<th>Insert Intention</th>
+<th>Record</th>
+<th>Next-Key</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gap</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>兼容</td>
+</tr>
+<tr>
+<td>Insert Intention</td>
+<td>冲突</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>冲突</td>
+</tr>
+<tr>
+<td>Record</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>冲突</td>
+<td>冲突</td>
+</tr>
+<tr>
+<td>Next-Key</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>冲突</td>
+<td>冲突</td>
+</tr>
+</tbody></table>
+<p>存在Insert Intention 锁时，申请Gap锁是允许的；但是存在Gap锁时，申请Insert Intention锁时是被阻止的。</p>
+<h4 id="自增锁-AUTO-INC-Locks"><a href="#自增锁-AUTO-INC-Locks" class="headerlink" title="自增锁(AUTO-INC Locks)"></a>自增锁(AUTO-INC Locks)</h4><p>表级锁，多个事务同时插入时，保证AUTO_INCREMENT列递增。</p>
+<h2 id="二、Sql加锁情况"><a href="#二、Sql加锁情况" class="headerlink" title="二、Sql加锁情况"></a>二、Sql加锁情况</h2><h3 id="普通select"><a href="#普通select" class="headerlink" title="普通select"></a>普通select</h3><p>1.读未提交，读提交，可重复读 <strong>不加锁，快照读</strong><br>2.串行化，普通select会升级为 <code>select … in share mode</code></p>
+<h3 id="加锁select"><a href="#加锁select" class="headerlink" title="加锁select"></a>加锁select</h3><p><code>select … for update</code><br><code>select … in share mode</code><br>1.唯一索引，唯一条件 <strong>记录锁(Record Locks)</strong><br>2.其他的查询条件和索引条件 <strong>间隙锁(Gap Locks)与临键锁(Next-Key Locks)</strong></p>
+<h3 id="update与delete"><a href="#update与delete" class="headerlink" title="update与delete"></a>update与delete</h3><p>1.唯一索引，唯一条件 <strong>记录锁(Record Locks)</strong><br>2.其他， <strong>排他临键锁(Next-Key Locks)</strong></p>
+<h3 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h3><p><strong>排它锁</strong> 、同时，会在插入区间加插入 <strong>意向锁(insert intention lock)</strong> 。</p>
+<p>感谢：<br><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.5/en/innodb-locks-table.html">https://dev.mysql.com/doc/refman/5.5/en/innodb-locks-table.html</a><br><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.6/en/innodb-locking.html#innodb-auto-inc-locks">https://dev.mysql.com/doc/refman/5.6/en/innodb-locking.html#innodb-auto-inc-locks</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/tmkRAmc1M_Y23ynduBeP3Q">https://mp.weixin.qq.com/s/tmkRAmc1M_Y23ynduBeP3Q</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhanghongzheng3213/article/details/53436240">https://blog.csdn.net/zhanghongzheng3213/article/details/53436240</a><br><a target="_blank" rel="noopener" href="http://narcissusoyf.iteye.com/blog/1637309">http://narcissusoyf.iteye.com/blog/1637309</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/mysql/mysql45-%E6%80%BB%E7%BB%93/" rel="prev" title="「MySQL45讲」个人总结">
+      <i class="fa fa-chevron-left"></i> 「MySQL45讲」个人总结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81innodb%E4%B8%83%E7%A7%8D%E9%94%81"><span class="nav-text">一、innodb七种锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB-%E6%8E%92%E4%BB%96%E9%94%81-Shared-and-Exclusive-Locks"><span class="nav-text">共享&#x2F;排他锁(Shared and Exclusive Locks)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%84%8F%E5%90%91%E9%94%81-Intention-Locks"><span class="nav-text">意向锁(Intention Locks)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E9%94%81"><span class="nav-text">行锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E9%94%81-Record-Locks"><span class="nav-text">记录锁(Record Locks)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%B4%E9%9A%99%E9%94%81-Gap-Locks"><span class="nav-text">间隙锁(Gap Locks)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%B4%E9%94%AE%E9%94%81-Next-Key-Locks"><span class="nav-text">临键锁(Next-Key Locks)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%84%8F%E5%90%91%E9%94%81-Insert-Intention-Locks"><span class="nav-text">插入意向锁(Insert Intention Locks)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%A2%9E%E9%94%81-AUTO-INC-Locks"><span class="nav-text">自增锁(AUTO-INC Locks)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Sql%E5%8A%A0%E9%94%81%E6%83%85%E5%86%B5"><span class="nav-text">二、Sql加锁情况</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9Aselect"><span class="nav-text">普通select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E9%94%81select"><span class="nav-text">加锁select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#update%E4%B8%8Edelete"><span class="nav-text">update与delete</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insert"><span class="nav-text">insert</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Senkorl</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+    
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
