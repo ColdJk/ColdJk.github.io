@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Comic Sans MS:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"senkorl.xyz","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="该文介绍了 Laravel 的 Eloquent 模型的常见用法。 模型约定默认情况下Model会自动关联一个复数形式的数据表，也可以指定一个自定义的数据表名称： 1protected $table &#x3D; &amp;#x27;my_tables&amp;#x27;;  Eloquent 也会假设每个数据表都有一个叫做 id 的主键字段。如果主键不是ID，也可以定义一个 $primaryKey 属性来重写这个约定。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「Laravel」Eloquent模型的常见用法">
+<meta property="og:url" content="https://senkorl.xyz/laravel/laravel-Eloquent%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="Senkorl">
+<meta property="og:description" content="该文介绍了 Laravel 的 Eloquent 模型的常见用法。 模型约定默认情况下Model会自动关联一个复数形式的数据表，也可以指定一个自定义的数据表名称： 1protected $table &#x3D; &amp;#x27;my_tables&amp;#x27;;  Eloquent 也会假设每个数据表都有一个叫做 id 的主键字段。如果主键不是ID，也可以定义一个 $primaryKey 属性来重写这个约定。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-02T04:02:01.000Z">
+<meta property="article:modified_time" content="2018-11-02T04:02:01.000Z">
+<meta property="article:author" content="Senkorl">
+<meta property="article:tag" content="Laravel">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://senkorl.xyz/laravel/laravel-Eloquent%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>「Laravel」Eloquent模型的常见用法 | Senkorl</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Senkorl</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于最有价值的事情.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myhome/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://senkorl.xyz/laravel/laravel-Eloquent%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Senkorl">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Senkorl">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「Laravel」Eloquent模型的常见用法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-02 12:02:01" itemprop="dateCreated datePublished" datetime="2018-11-02T12:02:01+08:00">2018-11-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Laravel/" itemprop="url" rel="index"><span itemprop="name">Laravel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>该文介绍了 Laravel 的 Eloquent 模型的常见用法。</p>
+<h2 id="模型约定"><a href="#模型约定" class="headerlink" title="模型约定"></a>模型约定</h2><p>默认情况下Model会自动关联一个复数形式的数据表，也可以指定一个自定义的数据表名称：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="variable">$table</span> = <span class="string">&#x27;my_tables&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Eloquent 也会假设每个数据表都有一个叫做 id 的主键字段。如果主键不是ID，也可以定义一个 $primaryKey 属性来重写这个约定。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="variable">$primaryKey</span> = <span class="string">&#x27;my_id&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，Eloquent 会预计你的数据表中有 created_at 和 updated_at 字段。如果你不希望让 Eloquent 来自动维护这两个字段，可在模型内将 $timestamps 属性设置为 false</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="variable">$timestamps</span> = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，所有的 Eloquent 模型会使用应用程序中默认的数据库连接设置。如果你想为模型指定不同的连接，可以使用 $connection 属性：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="variable">$connection</span> = <span class="string">&#x27;mssql&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以被批量赋值的属性</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="variable">$fillable</span> = [<span class="string">&#x27;name&#x27;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>其他定义：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="variable">$dateFormat</span> = <span class="string">&#x27;U&#x27;</span>;<span class="comment">//模型日期列的存储格式</span></span><br><span class="line"><span class="keyword">const</span> CREATED_AT = <span class="string">&#x27;creation_date&#x27;</span>; <span class="comment">//定义时间戳的字段名称</span></span><br><span class="line"><span class="keyword">const</span> UPDATED_AT = <span class="string">&#x27;last_update&#x27;</span>; <span class="comment">//定义时间戳的字段名称</span></span><br><span class="line"><span class="keyword">protected</span> <span class="variable">$guarded</span> = [<span class="string">&#x27;price&#x27;</span>];<span class="comment">//不能被批量赋值的属性</span></span><br><span class="line"><span class="keyword">protected</span> <span class="variable">$dates</span> = [<span class="string">&#x27;deleted_at&#x27;</span>];<span class="comment">//应该被调整为日期的属性</span></span><br><span class="line"><span class="keyword">protected</span> <span class="variable">$casts</span> = [<span class="string">&#x27;option&#x27;</span> =&gt; <span class="string">&#x27;array&#x27;</span>];<span class="comment">//获取字段时自动转换成该属性指定的类型</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="模型查询"><a href="#模型查询" class="headerlink" title="模型查询"></a>模型查询</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查询全部数据</span></span><br><span class="line"><span class="variable">$flights</span> = App\Flight::all();</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$flights</span> <span class="keyword">as</span> <span class="variable">$flight</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$flight</span>-&gt;name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过主键取回一个模型</span></span><br><span class="line">Model::find(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用主键数组作为参数</span></span><br><span class="line">Model::find([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用双主键进行查找</span></span><br><span class="line">Model::find(<span class="keyword">array</span>(<span class="string">&#x27;first&#x27;</span>, <span class="string">&#x27;last&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找失败时抛出异常</span></span><br><span class="line">Model::findOrFail(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用双主键进行查找, 失败时抛出异常</span></span><br><span class="line">Model::findOrFail(<span class="keyword">array</span>(<span class="string">&#x27;first&#x27;</span>, <span class="string">&#x27;last&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取回符合查询限制的所有</span></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取回符合查询限制的第一个模型</span></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;first();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 是否存在</span></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;exists();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态属性查找</span></span><br><span class="line">Model::whereFoo(<span class="string">&#x27;bar&#x27;</span>)-&gt;first();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找失败时抛出异常</span></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;firstOrFail();</span><br><span class="line"></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;count();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 比如 count, max，min， avg，还有 sum</span></span><br><span class="line">Model::where(<span class="string">&#x27;active&#x27;</span>, <span class="number">1</span>)-&gt;max(<span class="string">&#x27;price&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出原始的查询语句</span></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;toSql();</span><br><span class="line"></span><br><span class="line">Model::whereRaw(<span class="string">&#x27;foo = bar and cars = 2&#x27;</span>, <span class="keyword">array</span>(<span class="number">20</span>))-&gt;get();</span><br><span class="line">Model::on(<span class="string">&#x27;connection-name&#x27;</span>)-&gt;find(<span class="number">1</span>);</span><br><span class="line">Model::with(<span class="string">&#x27;relation&#x27;</span>)-&gt;get();</span><br><span class="line">Model::all()-&gt;take(<span class="number">10</span>);</span><br><span class="line">Model::all()-&gt;skip(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认的 Eloquent 排序是上升排序</span></span><br><span class="line">Model::orderBy(<span class="string">&#x27;column&#x27;</span>, <span class="string">&#x27;asc&#x27;</span>)-&gt;get();</span><br><span class="line">Model::orderBy(<span class="string">&#x27;column&#x27;</span>, <span class="string">&#x27;desc&#x27;</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在查询结果中包括带被软删除的模型</span></span><br><span class="line">Model::withTrashed()-&gt;where(<span class="string">&#x27;cars&#x27;</span>, <span class="number">2</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找只带有软删除的模型</span></span><br><span class="line">Model::onlyTrashed()-&gt;where(<span class="string">&#x27;cars&#x27;</span>, <span class="number">2</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+
+<h2 id="插入-amp-更新模型"><a href="#插入-amp-更新模型" class="headerlink" title="插入 &amp; 更新模型"></a>插入 &amp; 更新模型</h2><p>创建新数据</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Model::create(<span class="keyword">array</span>(<span class="string">&#x27;key&#x27;</span> =&gt; <span class="string">&#x27;value&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$flight</span> = <span class="keyword">new</span> Flight;</span><br><span class="line"><span class="variable">$flight</span>-&gt;name = <span class="variable">$request</span>-&gt;name;</span><br><span class="line"><span class="variable">$flight</span>-&gt;save();</span><br></pre></td></tr></table></figure>
+
+<p>更新数据</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$flight</span> = App\Flight::find(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$flight</span>-&gt;name = <span class="string">&#x27;New Flight Name&#x27;</span>;</span><br><span class="line"><span class="variable">$flight</span>-&gt;save();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 批量更新</span></span><br><span class="line">App\Flight::where(<span class="string">&#x27;active&#x27;</span>, <span class="number">1</span>)</span><br><span class="line">          -&gt;where(<span class="string">&#x27;destination&#x27;</span>, <span class="string">&#x27;San Diego&#x27;</span>)</span><br><span class="line">          -&gt;update([<span class="string">&#x27;delayed&#x27;</span> =&gt; <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过属性找到第一条相匹配的数据或创造一条新数据</span></span><br><span class="line">Model::firstOrCreate(<span class="keyword">array</span>(<span class="string">&#x27;key&#x27;</span> =&gt; <span class="string">&#x27;value&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 程序会查询 name 为 antto 的数据是否存在，如果不存在，才将 name, avatar, gender 数据一并创建新数据</span></span><br><span class="line"><span class="variable">$user</span> = User::firstOrCreate(</span><br><span class="line">    [<span class="string">&#x27;name&#x27;</span> =&gt; <span class="string">&#x27;antto&#x27;</span>],</span><br><span class="line">    [</span><br><span class="line">        <span class="string">&#x27;avatar&#x27;</span> =&gt; <span class="string">&#x27;http://....&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;gender&#x27;</span> =&gt; <span class="string">&#x27;male&#x27;</span>,</span><br><span class="line">    ]</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过属性找到第一条相匹配的数据或实例化一条新数据</span></span><br><span class="line">Model::firstOrNew(<span class="keyword">array</span>(<span class="string">&#x27;key&#x27;</span> =&gt; <span class="string">&#x27;value&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过属性找到相匹配的数据并更新，如果不存在即创建</span></span><br><span class="line"> Model::updateOrCreate(<span class="keyword">array</span>(<span class="string">&#x27;search_key&#x27;</span> =&gt; <span class="string">&#x27;search_value&#x27;</span>), <span class="keyword">array</span>(<span class="string">&#x27;key&#x27;</span> =&gt; <span class="string">&#x27;value&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用属性的数组来填充一个模型, 用的时候要小心「Mass Assignment」安全问题 !</span></span><br><span class="line">Model::fill(<span class="variable">$attributes</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>启动模型上的软删除</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Database</span>\<span class="title">Eloquent</span>\<span class="title">SoftDeletes</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flight</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">SoftDeletes</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Model::destroy(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多主键删除</span></span><br><span class="line">Model::destroy([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">Model::where(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)-&gt;delete();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 恢复被软删除的模型</span></span><br><span class="line">Model::withTrashed()-&gt;where(<span class="string">&#x27;cars&#x27;</span>, <span class="number">2</span>)-&gt;restore();</span><br><span class="line"></span><br><span class="line">Model::where(<span class="string">&#x27;cars&#x27;</span>, <span class="number">2</span>)-&gt;forceDelete();</span><br></pre></td></tr></table></figure>
+
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><p>定义</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">scopePopular</span>(<span class="params"><span class="variable">$query</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$query</span>-&gt;where(<span class="string">&#x27;votes&#x27;</span>, <span class="string">&#x27;&gt;&#x27;</span>, <span class="number">100</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">scopeActive</span>(<span class="params"><span class="variable">$query</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$query</span>-&gt;where(<span class="string">&#x27;active&#x27;</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$users</span> = App\User::popular()-&gt;active()-&gt;orderBy(<span class="string">&#x27;created_at&#x27;</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+
+<h2 id="模型关联"><a href="#模型关联" class="headerlink" title="模型关联"></a>模型关联</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一对一 - User::phone()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasOne(<span class="string">&#x27;App\Phone&#x27;</span>, <span class="string">&#x27;foreign_key&#x27;</span>, <span class="string">&#x27;local_key&#x27;</span>);</span><br><span class="line"><span class="comment">// 一对一 - Phone::user(), 定义相对的关联</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">&#x27;App\User&#x27;</span>, <span class="string">&#x27;foreign_key&#x27;</span>, <span class="string">&#x27;other_key&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一对多 - Post::comments()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasMany(<span class="string">&#x27;App\Comment&#x27;</span>, <span class="string">&#x27;foreign_key&#x27;</span>, <span class="string">&#x27;local_key&#x27;</span>);</span><br><span class="line"><span class="comment">//  一对多 - Comment::post()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">&#x27;App\Post&#x27;</span>, <span class="string">&#x27;foreign_key&#x27;</span>, <span class="string">&#x27;other_key&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多对多 - User::roles();</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">&#x27;App\Role&#x27;</span>, <span class="string">&#x27;user_roles&#x27;</span>, <span class="string">&#x27;user_id&#x27;</span>, <span class="string">&#x27;role_id&#x27;</span>);</span><br><span class="line"><span class="comment">// 多对多 - Role::users();</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">&#x27;App\User&#x27;</span>);</span><br><span class="line"><span class="comment">// 多对多 - Retrieving Intermediate Table Columns</span></span><br><span class="line"><span class="variable">$role</span>-&gt;pivot-&gt;created_at;</span><br><span class="line"><span class="comment">// 多对多 - 中介表字段</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">&#x27;App\Role&#x27;</span>)-&gt;withPivot(<span class="string">&#x27;column1&#x27;</span>, <span class="string">&#x27;column2&#x27;</span>);</span><br><span class="line"><span class="comment">// 多对多 - 自动维护 created_at 和 updated_at 时间戳</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(<span class="string">&#x27;App\Role&#x27;</span>)-&gt;withTimestamps();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 远层一对多 - Country::posts(), 一个 Country 模型可能通过中介的 Users</span></span><br><span class="line"> <span class="comment">// 模型关联到多个 Posts 模型(User::country_id)</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;hasManyThrough(<span class="string">&#x27;App\Post&#x27;</span>, <span class="string">&#x27;App\User&#x27;</span>, <span class="string">&#x27;country_id&#x27;</span>, <span class="string">&#x27;user_id&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多态关联 - Photo::imageable()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphTo();</span><br><span class="line"><span class="comment">// 多态关联 - Staff::photos()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphMany(<span class="string">&#x27;App\Photo&#x27;</span>, <span class="string">&#x27;imageable&#x27;</span>);</span><br><span class="line"><span class="comment">// 多态关联 - Product::photos()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphMany(<span class="string">&#x27;App\Photo&#x27;</span>, <span class="string">&#x27;imageable&#x27;</span>);</span><br><span class="line"><span class="comment">// 多态关联 - 在 AppServiceProvider 中注册你的「多态对照表」</span></span><br><span class="line"> Relation::morphMap([</span><br><span class="line">    <span class="string">&#x27;Post&#x27;</span> =&gt; App\Post::class,</span><br><span class="line">    <span class="string">&#x27;Comment&#x27;</span> =&gt; App\Comment::class,</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多态多对多关联 - 涉及数据库表: posts,videos,tags,taggables</span></span><br><span class="line"> <span class="comment">// Post::tags()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphToMany(<span class="string">&#x27;App\Tag&#x27;</span>, <span class="string">&#x27;taggable&#x27;</span>);</span><br><span class="line"><span class="comment">// Video::tags()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphToMany(<span class="string">&#x27;App\Tag&#x27;</span>, <span class="string">&#x27;taggable&#x27;</span>);</span><br><span class="line"><span class="comment">// Tag::posts()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphedByMany(<span class="string">&#x27;App\Post&#x27;</span>, <span class="string">&#x27;taggable&#x27;</span>);</span><br><span class="line"><span class="comment">// Tag::videos()</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;morphedByMany(<span class="string">&#x27;App\Video&#x27;</span>, <span class="string">&#x27;taggable&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找关联</span></span><br><span class="line"><span class="variable">$user</span>-&gt;posts()-&gt;where(<span class="string">&#x27;active&#x27;</span>, <span class="number">1</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 获取所有至少有一篇评论的文章...</span></span><br><span class="line"><span class="variable">$posts</span> = App\Post::has(<span class="string">&#x27;comments&#x27;</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 获取所有至少有三篇评论的文章...</span></span><br><span class="line"><span class="variable">$posts</span> = Post::has(<span class="string">&#x27;comments&#x27;</span>, <span class="string">&#x27;&gt;=&#x27;</span>, <span class="number">3</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 获取所有至少有一篇评论被评分的文章...</span></span><br><span class="line"><span class="variable">$posts</span> = Post::has(<span class="string">&#x27;comments.votes&#x27;</span>)-&gt;get();</span><br><span class="line"><span class="comment">// 获取所有至少有一篇评论相似于 foo% 的文章</span></span><br><span class="line"><span class="variable">$posts</span> = Post::whereHas(<span class="string">&#x27;comments&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params"><span class="variable">$query</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$query</span>-&gt;where(<span class="string">&#x27;content&#x27;</span>, <span class="string">&#x27;like&#x27;</span>, <span class="string">&#x27;foo%&#x27;</span>);</span><br><span class="line">&#125;)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 预加载</span></span><br><span class="line"><span class="variable">$books</span> = App\Book::with(<span class="string">&#x27;author&#x27;</span>)-&gt;get();</span><br><span class="line"><span class="variable">$books</span> = App\Book::with(<span class="string">&#x27;author&#x27;</span>, <span class="string">&#x27;publisher&#x27;</span>)-&gt;get();</span><br><span class="line"><span class="variable">$books</span> = App\Book::with(<span class="string">&#x27;author.contacts&#x27;</span>)-&gt;get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 延迟预加载</span></span><br><span class="line"><span class="variable">$books</span>-&gt;load(<span class="string">&#x27;author&#x27;</span>, <span class="string">&#x27;publisher&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入关联模型</span></span><br><span class="line"><span class="variable">$comment</span> = <span class="keyword">new</span> App\Comment([<span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;A new comment.&#x27;</span>]);</span><br><span class="line"><span class="variable">$post</span>-&gt;comments()-&gt;save(<span class="variable">$comment</span>);</span><br><span class="line"><span class="comment">// Save 与多对多关联</span></span><br><span class="line"><span class="variable">$post</span>-&gt;comments()-&gt;saveMany([</span><br><span class="line">    <span class="keyword">new</span> App\Comment([<span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;A new comment.&#x27;</span>]),</span><br><span class="line">    <span class="keyword">new</span> App\Comment([<span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;Another comment.&#x27;</span>]),</span><br><span class="line">]);</span><br><span class="line"><span class="variable">$post</span>-&gt;comments()-&gt;create([<span class="string">&#x27;message&#x27;</span> =&gt; <span class="string">&#x27;A new comment.&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新「从属」关联</span></span><br><span class="line"><span class="variable">$user</span>-&gt;account()-&gt;associate(<span class="variable">$account</span>);</span><br><span class="line"><span class="variable">$user</span>-&gt;save();</span><br><span class="line"><span class="variable">$user</span>-&gt;account()-&gt;dissociate();</span><br><span class="line"><span class="variable">$user</span>-&gt;save();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 附加多对多关系</span></span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;attach(<span class="variable">$roleId</span>);</span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;attach(<span class="variable">$roleId</span>, [<span class="string">&#x27;expires&#x27;</span> =&gt; <span class="variable">$expires</span>]);</span><br><span class="line"><span class="comment">// 从用户上移除单一身份...</span></span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;detach(<span class="variable">$roleId</span>);</span><br><span class="line"><span class="comment">// 从用户上移除所有身份...</span></span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;detach();</span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;detach([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;attach([<span class="number">1</span> =&gt; [<span class="string">&#x27;expires&#x27;</span> =&gt; <span class="variable">$expires</span>], <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 任何不在给定数组中的 IDs 将会从中介表中被删除。</span></span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;sync([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="comment">// 你也可以传递中介表上该 IDs 额外的值：</span></span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;sync([<span class="number">1</span> =&gt; [<span class="string">&#x27;expires&#x27;</span> =&gt; <span class="literal">true</span>], <span class="number">2</span>, <span class="number">3</span>]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="时间戳"><a href="#时间戳" class="headerlink" title="时间戳"></a>时间戳</h2><p>默认情况下，<code>Laravel Eloquent</code> 模型默认数据表有 <code>created_at</code> 和 <code>updated_at</code> 两个字段。当然，我们可以做很多自定义配置，实现很多有趣的功能。下面举例说明。</p>
+<hr>
+<h3 id="1-禁用时间戳"><a href="#1-禁用时间戳" class="headerlink" title="1. 禁用时间戳"></a>1. 禁用时间戳</h3><p>如果数据表没有这两个字段，保存数据时 <strong>Model::create($arrayOfValues);</strong> —— 会看到 <code>SQL error</code>。<code>Laravel</code> 在自动填充 <code>created_at / updated_at</code> 的时候，无法找到这两个字段。</p>
+<p>禁用自动填充时间戳，只需要在 <code>Eloquent Model</code> 添加上一个属性：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Role</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$timestamps</span> = <span class="literal">FALSE</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 其他的属性和方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-修改时间戳默认列表"><a href="#2-修改时间戳默认列表" class="headerlink" title="2. 修改时间戳默认列表"></a>2. 修改时间戳默认列表</h3><p>假如当前使用的是非 <code>Laravel</code> 类型的数据库，也就是你的时间戳列的命名方式与此不同该怎么办？ 也许，它们分别叫做 <strong>create_time</strong> 和 <strong>update_time</strong>。恭喜，你也可以在模型种这么定义：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Role</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> CREATED_AT = <span class="string">&#x27;create_time&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> UPDATED_AT = <span class="string">&#x27;update_time&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-修改时间戳日期-时间格式"><a href="#3-修改时间戳日期-时间格式" class="headerlink" title="3. 修改时间戳日期 / 时间格式"></a>3. 修改时间戳日期 / 时间格式</h3><p>以下内容引用官网文档 <a target="_blank" rel="noopener" href="https://learnku.com/docs/laravel/master/eloquent-mutators#date-mutators">official Laravel documentation:</a></p>
+<p>默认情况下，时间戳自动格式为 <code>&#39;Y-m-d H:i:s&#39;</code>。 如果您需要自定义时间戳格式，可以在你的模型中设置 <code>$dateFormat</code> 属性。这个属性确定日期在数据库中的存储格式，以及在序列化成数组或 JSON 时的格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flight</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日期时间的存储格式</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@var</span> strings</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$dateFormat</span> = <span class="string">&#x27;U&#x27;</span>; </span><br><span class="line">    <span class="comment">// U	从 Unix 纪元（January 1 1970 00:00:00 GMT）开始至今的秒数	参见 time()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-多对多：带时间戳的中间表"><a href="#4-多对多：带时间戳的中间表" class="headerlink" title="4. 多对多：带时间戳的中间表"></a>4. 多对多：带时间戳的中间表</h3><p>当在多对多的关联中，时间戳不会自动填充，例如 用户表 <strong>users</strong> 和 角色表 <strong>roles</strong> 的中间表 <strong>role_user</strong>。</p>
+<p>在这个模型中您可以这样定义关系：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(Role::class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后当你想用户中添加角色时，可以这样使用：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$roleID</span> = <span class="number">1</span>;</span><br><span class="line"><span class="variable">$user</span>-&gt;roles()-&gt;attach(<span class="variable">$roleID</span>);</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，这个中间表<strong>不包含时间戳</strong>。并且 <code>Laravel</code> 不会尝试自动填充 <code>created_at/updated_at</code></p>
+<p>但是如果你想自动保存时间戳，您需要在迁移文件中添加 <code>created_at/updated_at</code>，然后在模型的关联中加上 <strong>-&gt;withTimestamps();</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">roles</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsToMany(Role::class)-&gt;withTimestamps();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5-使用-latest-和-oldest-进行时间戳排序"><a href="#5-使用-latest-和-oldest-进行时间戳排序" class="headerlink" title="5. 使用 latest() 和 oldest() 进行时间戳排序"></a>5. 使用 <code>latest()</code> 和 <code>oldest()</code> 进行时间戳排序</h3><p>使用时间戳排序有两个 “快捷方法”。</p>
+<p>取而代之：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User::orderBy(<span class="string">&#x27;created_at&#x27;</span>, <span class="string">&#x27;desc&#x27;</span>)-&gt;get();</span><br></pre></td></tr></table></figure>
+
+<p>这么做更快捷：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User::latest()-&gt;get();</span><br></pre></td></tr></table></figure>
+
+<p>默认情况，<strong>latest()</strong> 使用 <strong>created_at</strong> 排序。</p>
+<p>与之对应，有一个 <strong>oldest()</strong> ，将会这么排序 <strong>created_at ascending</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User::oldest()-&gt;get();</span><br></pre></td></tr></table></figure>
+
+<p>当然，也可以使用指定的其他字段排序。例如，如果想要使用 <strong>updated_at</strong>，可以这么做：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$lastUpdatedUser</span> = User::latest(<span class="string">&#x27;updated_at&#x27;</span>)-&gt;first();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="6-不触发-updated-at-的修改"><a href="#6-不触发-updated-at-的修改" class="headerlink" title="6. 不触发 updated_at 的修改"></a>6. 不触发 <code>updated_at</code> 的修改</h3><p>无论何时，当修改 <code>Eloquent</code> 记录，都将会自动使用当前时间戳来维护 <strong>updated_at</strong> 字段，这是个非常棒的特性。</p>
+<p>但是有时候你却不想这么做，例如：当增加某个值，认为这不是 “整行更新”。</p>
+<p>那么，你可以一切如上 —— 只需禁用 <code>timestamps</code>，记住这是临时的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$user</span> = User::find(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$user</span>-&gt;profile_views_count = <span class="number">123</span>;</span><br><span class="line"><span class="variable">$user</span>-&gt;timestamps = <span class="literal">false</span>;</span><br><span class="line"><span class="variable">$user</span>-&gt;save();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="7-仅更新时间戳和关联时间戳"><a href="#7-仅更新时间戳和关联时间戳" class="headerlink" title="7. 仅更新时间戳和关联时间戳"></a>7. 仅更新时间戳和关联时间戳</h3><p>与上一个例子恰好相反，也许您需要仅更新 <strong>updated_at</strong> 字段，而不改变其他列。</p>
+<p>所以，不建议下面这种写法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$user</span>-&gt;update([<span class="string">&#x27;updated_at&#x27;</span> =&gt; now()]);</span><br></pre></td></tr></table></figure>
+
+<p>您可以使用更快捷的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$user</span>-&gt;touch();</span><br></pre></td></tr></table></figure>
+
+<p>另一种情况，有时候您不仅希望更新当前模型的 <strong>updated_at</strong>，也希望更新上级关系的记录。</p>
+<p>例如，某个 <strong>comment</strong> 被更新，那么您希望将 <strong>post</strong> 表的 <code>updated_at</code> 也更新。</p>
+<p>那么，您需要在模型中定义 <code>$touches</code> 属性：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Comment</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$touches</span> = [<span class="string">&#x27;post&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">post</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;belongsTo(<span class="string">&#x27;Post&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="8-时间戳字段自动转换-Carbon-类"><a href="#8-时间戳字段自动转换-Carbon-类" class="headerlink" title="8. 时间戳字段自动转换 Carbon 类"></a>8. 时间戳字段自动转换 <code>Carbon</code> 类</h3><p>最后一个技巧，但更像是一个提醒，因为您应该已经知道它。</p>
+<p>默认情况下，<strong>created_at</strong> 和 <strong>updated_at</strong> 字段被自动转换为 <strong>$dates</strong>，<br>所以您不需要将他们转换为 <code>Carbon</code> 实例，即可以使用 <code>Carbon</code> 的方法。</p>
+<p>例如：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$user</span>-&gt;created_at-&gt;addDays(<span class="number">3</span>);</span><br><span class="line">now()-&gt;diffInDays(<span class="variable">$user</span>-&gt;updated_at);</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Laravel/" rel="tag"># Laravel</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/laravel/laravel-%E9%80%9F%E6%9F%A5%E8%A1%A8/" rel="prev" title="「Laravel」速查表">
+      <i class="fa fa-chevron-left"></i> 「Laravel」速查表
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/mysql/mysql-explain/" rel="next" title="「MySQL」explain">
+      「MySQL」explain <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%BA%A6%E5%AE%9A"><span class="nav-text">模型约定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%9F%A5%E8%AF%A2"><span class="nav-text">模型查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E5%85%A5-amp-%E6%9B%B4%E6%96%B0%E6%A8%A1%E5%9E%8B"><span class="nav-text">插入 &amp; 更新模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-text">删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%85%B3%E8%81%94"><span class="nav-text">模型关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%88%B3"><span class="nav-text">时间戳</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%A6%81%E7%94%A8%E6%97%B6%E9%97%B4%E6%88%B3"><span class="nav-text">1. 禁用时间戳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E6%88%B3%E9%BB%98%E8%AE%A4%E5%88%97%E8%A1%A8"><span class="nav-text">2. 修改时间戳默认列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4%E6%88%B3%E6%97%A5%E6%9C%9F-%E6%97%B6%E9%97%B4%E6%A0%BC%E5%BC%8F"><span class="nav-text">3. 修改时间戳日期 &#x2F; 时间格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A4%9A%E5%AF%B9%E5%A4%9A%EF%BC%9A%E5%B8%A6%E6%97%B6%E9%97%B4%E6%88%B3%E7%9A%84%E4%B8%AD%E9%97%B4%E8%A1%A8"><span class="nav-text">4. 多对多：带时间戳的中间表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E4%BD%BF%E7%94%A8-latest-%E5%92%8C-oldest-%E8%BF%9B%E8%A1%8C%E6%97%B6%E9%97%B4%E6%88%B3%E6%8E%92%E5%BA%8F"><span class="nav-text">5. 使用 latest() 和 oldest() 进行时间戳排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%B8%8D%E8%A7%A6%E5%8F%91-updated-at-%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-text">6. 不触发 updated_at 的修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E4%BB%85%E6%9B%B4%E6%96%B0%E6%97%B6%E9%97%B4%E6%88%B3%E5%92%8C%E5%85%B3%E8%81%94%E6%97%B6%E9%97%B4%E6%88%B3"><span class="nav-text">7. 仅更新时间戳和关联时间戳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E6%97%B6%E9%97%B4%E6%88%B3%E5%AD%97%E6%AE%B5%E8%87%AA%E5%8A%A8%E8%BD%AC%E6%8D%A2-Carbon-%E7%B1%BB"><span class="nav-text">8. 时间戳字段自动转换 Carbon 类</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Senkorl</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+    
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
