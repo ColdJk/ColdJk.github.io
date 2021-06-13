@@ -563,7 +563,7 @@
 <li>count(<em>)，并不会把全部字段取出来，而是专门做了优化，不取值。count(</em>) 肯定不是 null，按行累加。</li>
 </ol>
 <p>按照效率排序的话，count(字段)&lt;count(主键 id)&lt;count(1)≈count(<em>)，所以建议尽量使用 count(</em>)。</p>
-<h2 id="15-答疑文章（一）：日志和索引相关问题"><a href="#15-答疑文章（一）：日志和索引相关问题" class="headerlink" title="15 | 答疑文章（一）：日志和索引相关问题"></a>15 | 答疑文章（一）：日志和索引相关问题</h2><h3 id="日志相关问题"><a href="#日志相关问题" class="headerlink" title="日志相关问题"></a>日志相关问题</h3><p>第2篇文章《日志系统：一条 SQL 更新语句是如何执行的？》，两阶段提交的不同瞬间MySQL 如果发生异常重启，是怎么保证数据完整性的？<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zxcc1314/article/details/84842650#no2.pic">原图</a><br><img src="https://img-blog.csdnimg.cn/20181219211503844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p4Y2MxMzE0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>如果redo处理perpare阶段，写binlog之前崩溃（crash），恢复时事务回滚。<br>如果binlog写完了，redo未commit前崩溃（crash）：</p>
+<h2 id="15-答疑文章（一）：日志和索引相关问题"><a href="#15-答疑文章（一）：日志和索引相关问题" class="headerlink" title="15 | 答疑文章（一）：日志和索引相关问题"></a>15 | 答疑文章（一）：日志和索引相关问题</h2><h3 id="日志相关问题"><a href="#日志相关问题" class="headerlink" title="日志相关问题"></a>日志相关问题</h3><p>第2篇文章《日志系统：一条 SQL 更新语句是如何执行的？》，两阶段提交的不同瞬间MySQL 如果发生异常重启，是怎么保证数据完整性的？<br><img src="https://img-blog.csdnimg.cn/20181219211503844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3p4Y2MxMzE0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>如果redo处理perpare阶段，写binlog之前崩溃（crash），恢复时事务回滚。<br>如果binlog写完了，redo未commit前崩溃（crash）：</p>
 <ol>
 <li>如果redo log事务完整，有了commit标识，直接提交；</li>
 <li>如果redo log里事务只有完整的perpare，则判断对应事务binlog是否完整：<br>a. 如果是，则提交事务；<br>b. 否则回滚。</li>
